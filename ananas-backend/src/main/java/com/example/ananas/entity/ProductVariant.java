@@ -1,14 +1,15 @@
 package com.example.ananas.entity;
 
-import com.example.ananas.entity.Product;
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -24,14 +25,14 @@ public class ProductVariant {
     @Column(name = "variant_id")
     int variantId;
 
-    @Column(name = "size")
-    int size;
-
-    @Column(name = "color",columnDefinition = "TEXT")
-    String color;
+    @Column(name = "color", columnDefinition = "TEXT")
+    String color; // Màu sắc của đồng hồ
 
     @Column(name = "stock")
-    int stock;
+    int stock; // Số lượng tồn kho
+
+    @Column(name = "strap_length")
+    double strapLength; // Độ dài dây đeo (mm)
 
     @OneToMany(mappedBy = "productVariant")
     @JsonManagedReference
@@ -46,5 +47,4 @@ public class ProductVariant {
     @JoinColumn(name = "product_id")
     @JsonBackReference
     Product product;
-
 }
