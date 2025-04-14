@@ -1,11 +1,9 @@
 package com.example.ananas.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.Instant;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +17,4 @@ public class MessageDTO {
     String message;
     Instant createdAt;
     String senderName; // Thêm trường này
-
 }

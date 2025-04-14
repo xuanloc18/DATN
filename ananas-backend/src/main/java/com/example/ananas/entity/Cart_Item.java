@@ -1,10 +1,11 @@
 package com.example.ananas.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 
 @Entity
 @Data
@@ -19,12 +20,8 @@ public class Cart_Item {
     @Column(name = "cart_item_id")
     int cartItemId;
 
-
-
     @Column(name = "quantity")
     int quantity;
-
-
 
     @ManyToOne
     @JsonBackReference("cart-cartItem") // Đặt tên trùng khớp với `JsonManagedReference` trong Cart
@@ -35,5 +32,4 @@ public class Cart_Item {
     @JsonBackReference
     @JoinColumn(name = "variant_id")
     ProductVariant productVariant;
-
 }

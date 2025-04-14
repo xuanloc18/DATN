@@ -1,19 +1,21 @@
 package com.example.ananas.entity.order;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.example.ananas.entity.Order_Item;
 import com.example.ananas.entity.User;
 import com.example.ananas.entity.voucher.Voucher;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -75,17 +77,17 @@ public class Order {
     Timestamp updatedAt;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-            @JsonManagedReference
+    @JsonManagedReference
     List<Order_Item> orderItems;
 
     public void addOrderItem(Order_Item orderItem) {
         orderItems.add(orderItem);
     }
+
     @PrePersist
     public void prePersist() {
         if (this.status == null) this.status = OrderStatus.PENDING;
-        if(this.paymentStatus == null)  this.paymentStatus = PaymentStatus.UNPAID;
-        if(this.createdAt == null)  this.createdAt = new Timestamp(System.currentTimeMillis());
+        if (this.paymentStatus == null) this.paymentStatus = PaymentStatus.UNPAID;
+        if (this.createdAt == null) this.createdAt = new Timestamp(System.currentTimeMillis());
     }
-
 }

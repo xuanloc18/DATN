@@ -1,9 +1,9 @@
 package com.example.ananas.dto.request;
 
+import java.time.Instant;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Data
 @Builder

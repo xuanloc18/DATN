@@ -1,14 +1,16 @@
 package com.example.ananas.entity;
 
+import java.time.Instant;
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Data
@@ -41,15 +43,12 @@ public class Category {
     List<Product> products;
 
     @PrePersist
-    public void handleBeforeCreate()
-    {
+    public void handleBeforeCreate() {
         this.createdAt = Instant.now();
     }
+
     @PreUpdate
-    public void handleBeforeUpdate()
-    {
+    public void handleBeforeUpdate() {
         this.updateAt = Instant.now();
     }
-
-
 }

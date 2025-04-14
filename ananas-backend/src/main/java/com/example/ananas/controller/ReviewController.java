@@ -1,18 +1,18 @@
 package com.example.ananas.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.ananas.dto.ReviewDTO;
-import com.example.ananas.dto.request.ReviewRequest;
 import com.example.ananas.dto.response.ApiResponse;
 import com.example.ananas.dto.response.ReviewResponse;
 import com.example.ananas.entity.Review;
 import com.example.ananas.service.Service.ReviewService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -22,12 +22,12 @@ public class ReviewController {
     ReviewService reviewService;
 
     @PostMapping
-    public ApiResponse<ReviewResponse> addReview(@RequestParam int userId, @RequestParam int productId, @RequestBody ReviewDTO review) {
+    public ApiResponse<ReviewResponse> addReview(
+            @RequestParam int userId, @RequestParam int productId, @RequestBody ReviewDTO review) {
         return ApiResponse.<ReviewResponse>builder()
                 .result(reviewService.addReviewToProduct(userId, productId, review))
                 .code(200)
                 .build();
-
     }
 
     @GetMapping("/count")
@@ -54,7 +54,6 @@ public class ReviewController {
                 .build();
     }
 
-
     @DeleteMapping
     public ApiResponse<Void> deleteReviewById(@RequestParam int reviewId) {
         reviewService.deleteReviewById(reviewId);
@@ -68,6 +67,4 @@ public class ReviewController {
                 .code(200)
                 .build();
     }
-
-
 }

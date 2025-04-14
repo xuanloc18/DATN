@@ -1,18 +1,20 @@
 package com.example.ananas.service.Service;
 
-import com.example.ananas.entity.Product;
-import com.example.ananas.repository.Product_Repository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.example.ananas.entity.Product;
+import com.example.ananas.repository.Product_Repository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ import java.io.IOException;
 public class ExportService {
     Product_Repository productRepository;
 
-    public  byte[] exportToExcel(int id) {
+    public byte[] exportToExcel(int id) {
         Product product = this.productRepository.findById(id).get();
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("product");
@@ -34,7 +36,7 @@ public class ExportService {
         row.createCell(2).setCellValue(product.getPrice());
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             workbook.write(bos);
-            return bos.toByteArray();  // return byte array of the Excel file
+            return bos.toByteArray(); // return byte array of the Excel file
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

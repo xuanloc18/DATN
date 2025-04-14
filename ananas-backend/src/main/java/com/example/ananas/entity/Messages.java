@@ -1,13 +1,14 @@
 package com.example.ananas.entity;
 
+import java.time.Instant;
+
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
-import java.util.Date;
 
 @Entity
 @Data
@@ -36,18 +37,17 @@ public class Messages {
     Instant createdAt;
 
     @PrePersist
-    public void handleBeforeCreate()
-    {
+    public void handleBeforeCreate() {
         this.createdAt = Instant.now();
     }
 
     @ManyToOne
-    @JoinColumn(name = "sender_id",insertable = false, updatable = false,nullable = false)
+    @JoinColumn(name = "sender_id", insertable = false, updatable = false, nullable = false)
     @JsonBackReference(value = "sent-messages")
     User sender;
 
     @ManyToOne
-    @JoinColumn(name = "receiver_id",insertable = false, updatable = false,nullable = false)
+    @JoinColumn(name = "receiver_id", insertable = false, updatable = false, nullable = false)
     @JsonBackReference(value = "received-messages")
     User receiver;
 }

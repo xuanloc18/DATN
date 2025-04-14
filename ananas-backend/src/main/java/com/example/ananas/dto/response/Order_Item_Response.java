@@ -1,11 +1,13 @@
 package com.example.ananas.dto.response;
+
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class Order_Item_Response {
     int productVariantId;
     int productId;
     String productName;
-    int size;
+    String size;
     String color;
     Integer quantity;
     String description;

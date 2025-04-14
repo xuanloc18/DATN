@@ -1,5 +1,23 @@
 package com.example.ananas.service.Service;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.ananas.dto.request.ChangePasswordRequest;
 import com.example.ananas.dto.request.UserCreateRequest;
 import com.example.ananas.dto.request.UserUpdateRequest;
@@ -11,27 +29,10 @@ import com.example.ananas.exception.ErrException;
 import com.example.ananas.mapper.IUserMapper;
 import com.example.ananas.repository.User_Repository;
 import com.example.ananas.service.IService.IUserService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,14 +54,18 @@ public class UserService implements IUserService {
         }
         User user = userMapper.toUser(userCreateRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        HashSet<String> roles = new HashSet<>(); // HashSet đảm bảo rằng mỗi vai trò của người dùng là duy nhất,tối ưu hóa các thao tác và kiểm tra vai trò
+        HashSet<String> roles =
+                new HashSet<>(); // HashSet đảm bảo rằng mỗi vai trò của người dùng là duy nhất,tối ưu hóa các thao tác
+        // và kiểm tra vai trò
         roles.add(Role.User.name()); // cho phep user them nguoidungmoi
         user.setRoles(roles);
         user.setCreateAt(LocalDateTime.now());
         user.setIsActive(true);
-        if (userCreateRequest.getEmail() != null && !userCreateRequest.getEmail().isEmpty()) {
+        if (userCreateRequest.getEmail() != null
+                && !userCreateRequest.getEmail().isEmpty()) {
             String subject = "Welcome to our service";
-            String text = "\nDear "+userCreateRequest.getUsername()+","+userCreateRequest.getEmail()+","+userCreateRequest.getPassword();
+            String text = "\nDear " + userCreateRequest.getUsername() + "," + userCreateRequest.getEmail() + ","
+                    + userCreateRequest.getPassword();
             emailService.sendMessage(userCreateRequest.getEmail(), subject, text);
         }
         return userMapper.toUserResponse(userRepository.save(user));
@@ -68,8 +73,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponse updateUser(int id, UserUpdateRequest userUpdateRequest) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
         userMapper.updateUser(user, userUpdateRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setUpdateAt(LocalDateTime.now());
@@ -79,8 +83,8 @@ public class UserService implements IUserService {
     @PostAuthorize("hasRole('Admin')")
     @Transactional
     public String deleteUser(int id) {
-        User userDelete = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
+        User userDelete =
+                userRepository.findById(id).orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
         userDelete.setIsActive(false);
         userRepository.save(userDelete);
         return "xoa thanh cong";
@@ -96,8 +100,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponse getUserbyId(int id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
         return userMapper.toUserResponse(user);
     }
 
@@ -106,18 +109,19 @@ public class UserService implements IUserService {
         return userRepository.getNumberOfUsersCreatedOn(date);
     }
 
-
     private boolean isPhoto(MultipartFile file) {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
     }
 
     private String storeFile(MultipartFile file) {
-        if (!isPhoto(file) || file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+        if (!isPhoto(file)
+                || file.getOriginalFilename() == null
+                || file.getOriginalFilename().isEmpty()) {
             throw new AppException(ErrException.NOT_FILE);
         }
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        String uniqueFilename = UUID.randomUUID().toString()+"_"+fileName;
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + fileName;
         java.nio.file.Path uploadDir = java.nio.file.Paths.get("upload/user");
         if (!Files.exists(uploadDir)) {
             try {
@@ -136,21 +140,20 @@ public class UserService implements IUserService {
     }
 
     public UserResponse uploadAvatar(int id, MultipartFile file) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
         String fileName = storeFile(file);
         user.setAvatar(fileName);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public Optional<UserResponse> getEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(userMapper::toUserResponse);
+        return userRepository.findByEmail(email).map(userMapper::toUserResponse);
     }
 
     // Đăng nhập và tạo JWT
     public String login(String username, String password) {
-        User user = userRepository.findByUsername(username)
+        User user = userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -164,12 +167,12 @@ public class UserService implements IUserService {
 
     // Quên mật khẩu - Gửi qua email
     public void forgotPassword(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user =
+                userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        String subject = "Dear, "+user.getUsername()+", your account has been reset password successfully.";
+        String subject = "Dear, " + user.getUsername() + ", your account has been reset password successfully.";
         String resetPassword = generateRandomPassword(6);
-        emailService.sendMessage(email, subject , "\nYour new password: "+resetPassword);
+        emailService.sendMessage(email, subject, "\nYour new password: " + resetPassword);
         user.setPassword(passwordEncoder.encode(resetPassword));
         user.setUpdateAt(LocalDateTime.now());
         userRepository.save(user);
@@ -191,8 +194,7 @@ public class UserService implements IUserService {
 
     // Đổi mật khẩu
     public boolean changePassword(int userId, ChangePasswordRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         if (user != null && passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             user.setUpdateAt(LocalDateTime.now());
@@ -201,5 +203,4 @@ public class UserService implements IUserService {
         }
         return false;
     }
-
 }

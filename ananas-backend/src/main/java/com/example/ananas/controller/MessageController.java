@@ -1,16 +1,16 @@
 package com.example.ananas.controller;
 
-import com.example.ananas.dto.MessageDTO;
-import com.example.ananas.entity.Messages;
-import com.example.ananas.service.Service.MessageService;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.http.MediaType;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.ananas.dto.MessageDTO;
+import com.example.ananas.service.Service.MessageService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -52,12 +52,14 @@ public class MessageController {
     }
 
     @GetMapping("/both")
-    public ResponseEntity<List<MessageDTO>> getBothMess(@RequestParam("senderId") Integer senderId, @RequestParam("receiverId") Integer receiverId) {
-        return ResponseEntity.ok(messageService.getMessBySenderAndReceiver(senderId,receiverId));
+    public ResponseEntity<List<MessageDTO>> getBothMess(
+            @RequestParam("senderId") Integer senderId, @RequestParam("receiverId") Integer receiverId) {
+        return ResponseEntity.ok(messageService.getMessBySenderAndReceiver(senderId, receiverId));
     }
 
     @GetMapping("/both2")
-    public ResponseEntity<List<MessageDTO>> getBoth2Mess( @RequestParam("receiverId") Integer receiverId,@RequestParam("senderId") Integer senderId) {
-        return ResponseEntity.ok(messageService.getMessByReceiverAndSender(receiverId,senderId));
+    public ResponseEntity<List<MessageDTO>> getBoth2Mess(
+            @RequestParam("receiverId") Integer receiverId, @RequestParam("senderId") Integer senderId) {
+        return ResponseEntity.ok(messageService.getMessByReceiverAndSender(receiverId, senderId));
     }
 }

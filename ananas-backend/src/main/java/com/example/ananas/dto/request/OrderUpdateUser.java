@@ -1,11 +1,14 @@
 package com.example.ananas.dto.request;
 
-import com.example.ananas.entity.order.PaymentMethod;
+import java.util.List;
+
 import jakarta.validation.constraints.*;
+
+import com.example.ananas.entity.order.PaymentMethod;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -29,5 +32,4 @@ public class OrderUpdateUser {
 
     @NotEmpty(message = "Danh sách sản phẩm không được để trống")
     List<Order_Items_Create> orderItems;
-
 }

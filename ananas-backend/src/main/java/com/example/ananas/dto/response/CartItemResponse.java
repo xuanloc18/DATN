@@ -1,9 +1,9 @@
 package com.example.ananas.dto.response;
 
+import java.util.List;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +18,13 @@ public class CartItemResponse {
     @NoArgsConstructor
     @Data
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public static class ProductVariantCart{
+    public static class ProductVariantCart {
         int variantId;
         String productName;
         int productId;
         String color;
         double price;
-        int size;
+        String size;
         int stock;
         List<String> images;
     }

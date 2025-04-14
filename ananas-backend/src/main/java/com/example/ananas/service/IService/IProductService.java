@@ -1,20 +1,19 @@
 package com.example.ananas.service.IService;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.ananas.dto.request.ProductCreateRequest;
 import com.example.ananas.dto.response.ProductImagesResponse;
 import com.example.ananas.dto.response.ProductResponse;
 import com.example.ananas.dto.response.ResultPaginationDTO;
 import com.example.ananas.entity.Product;
 import com.example.ananas.entity.ProductVariant;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public interface IProductService {
     ProductResponse createProduct(ProductCreateRequest productCreateRequest);
@@ -29,7 +28,7 @@ public interface IProductService {
 
     void deleteProduct(int id);
 
-    void uploadImages(int id, MultipartFile[]  files) throws IOException;
+    void uploadImages(int id, MultipartFile[] files) throws IOException;
 
     List<ProductImagesResponse> getAllImages(int id);
 
@@ -45,11 +44,11 @@ public interface IProductService {
 
     int getNumberProductOfCategory(int id);
 
-    Double getMaxPrice() ;
+    Double getMaxPrice();
 
     Double getMinPrice();
 
-    int getNumberOfProductBySizeAndColor(int productId, String color, int size);
+    int getNumberOfProductBySizeAndColor(int productId, String color, String size);
 
     List<Map<String, Object>> getProductNameAndStock();
 

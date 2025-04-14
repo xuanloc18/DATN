@@ -1,11 +1,9 @@
 package com.example.ananas.dto.response;
 
-import jakarta.persistence.Entity;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.Instant;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder

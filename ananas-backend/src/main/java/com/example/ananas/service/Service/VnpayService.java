@@ -1,16 +1,16 @@
 package com.example.ananas.service.Service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
 public class VnpayService {
@@ -28,15 +28,14 @@ public class VnpayService {
 
     @Value("${vnpay.ipAddress}")
     private String vnpIpAddr;
+
     public String code;
 
     public String getHashSecret() {
         return vnp_HashSecret;
     }
 
-
-
-    public String createPaymentURL(String orderInfo, long amount ) throws UnsupportedEncodingException {
+    public String createPaymentURL(String orderInfo, long amount) throws UnsupportedEncodingException {
         String vnpVersion = "2.1.0";
         String vnpCommand = "pay";
         String vnpCurrCode = "VND";
@@ -45,7 +44,8 @@ public class VnpayService {
         code = vnpTxnRef;
         String vnpOrderType = "billpayment"; // Ví dụ mã danh mục hàng hóa
         String vnpCreateDate = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        String vnpExpireDate = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(System.currentTimeMillis() + 10 * 60 * 1000)); // Hết hạn trong 30 phút
+        String vnpExpireDate = new SimpleDateFormat("yyyyMMddHHmmss")
+                .format(new Date(System.currentTimeMillis() + 10 * 60 * 1000)); // Hết hạn trong 30 phút
 
         // Tạo Map tham số
         Map<String, String> vnpParams = new HashMap<>();
@@ -65,17 +65,18 @@ public class VnpayService {
 
         // Tạo chuỗi hash để kiểm tra
         StringBuilder hashData = new StringBuilder();
-        vnpParams.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEach(entry -> {
-                    try {
-                        if (entry.getValue() != null) {
-                            hashData.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(), "UTF-8")).append("&");
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
+        vnpParams.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
+            try {
+                if (entry.getValue() != null) {
+                    hashData.append(entry.getKey())
+                            .append("=")
+                            .append(URLEncoder.encode(entry.getValue(), "UTF-8"))
+                            .append("&");
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Loại bỏ ký tự '&' cuối cùng
         String queryString = hashData.substring(0, hashData.length() - 1);
@@ -88,7 +89,11 @@ public class VnpayService {
         StringBuilder paymentUrl = new StringBuilder(vnp_Url + "?");
         vnpParams.entrySet().forEach(entry -> {
             try {
-                paymentUrl.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(), "UTF-8")).append("&");
+                paymentUrl
+                        .append(entry.getKey())
+                        .append("=")
+                        .append(URLEncoder.encode(entry.getValue(), "UTF-8"))
+                        .append("&");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -115,4 +120,3 @@ public class VnpayService {
         }
     }
 }
-

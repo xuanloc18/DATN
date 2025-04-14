@@ -1,20 +1,19 @@
 package com.example.ananas.dto.response;
 
-import com.example.ananas.entity.Order_Item;
-import com.example.ananas.entity.User;
-import com.example.ananas.entity.order.OrderStatus;
-import com.example.ananas.entity.order.PaymentMethod;
-import com.example.ananas.entity.order.PaymentStatus;
-import com.example.ananas.entity.voucher.Voucher;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+
+import jakarta.validation.constraints.*;
+
+import com.example.ananas.entity.order.OrderStatus;
+import com.example.ananas.entity.order.PaymentMethod;
+import com.example.ananas.entity.order.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

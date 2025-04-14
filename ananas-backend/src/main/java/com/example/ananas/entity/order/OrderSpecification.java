@@ -4,6 +4,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
 
 public class OrderSpecification implements Specification<Order> {
@@ -16,6 +17,7 @@ public class OrderSpecification implements Specification<Order> {
         this.status = status;
         this.paymentStatus = paymentStatus;
     }
+
     @Override
     public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         Predicate predicate = cb.conjunction(); // Khởi tạo Predicate chung
@@ -28,16 +30,16 @@ public class OrderSpecification implements Specification<Order> {
         // Kiểm tra status
         if (status != null && !status.isEmpty()) {
             OrderStatus orderStatus = OrderStatus.PENDING;
-            if(status.equalsIgnoreCase(OrderStatus.SHIPPED.name())) orderStatus = OrderStatus.SHIPPED;
-            if(status.equalsIgnoreCase(OrderStatus.DELIVERED.name())) orderStatus = OrderStatus.DELIVERED;
-            if(status.equalsIgnoreCase(OrderStatus.CANCELED.name())) orderStatus = OrderStatus.CANCELED;
+            if (status.equalsIgnoreCase(OrderStatus.SHIPPED.name())) orderStatus = OrderStatus.SHIPPED;
+            if (status.equalsIgnoreCase(OrderStatus.DELIVERED.name())) orderStatus = OrderStatus.DELIVERED;
+            if (status.equalsIgnoreCase(OrderStatus.CANCELED.name())) orderStatus = OrderStatus.CANCELED;
             predicate = cb.and(predicate, cb.equal(root.get("status"), orderStatus));
         }
 
         // Kiểm tra payment status
         if (paymentStatus != null && !paymentStatus.isEmpty()) {
-            PaymentStatus paymentStat =  PaymentStatus.UNPAID;
-            if(paymentStatus.equalsIgnoreCase(PaymentStatus.PAID.name())) paymentStat = PaymentStatus.PAID;
+            PaymentStatus paymentStat = PaymentStatus.UNPAID;
+            if (paymentStatus.equalsIgnoreCase(PaymentStatus.PAID.name())) paymentStat = PaymentStatus.PAID;
             predicate = cb.and(predicate, cb.equal(root.get("paymentStatus"), paymentStat));
         }
 

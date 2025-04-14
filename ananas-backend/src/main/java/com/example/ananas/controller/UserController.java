@@ -1,28 +1,24 @@
 package com.example.ananas.controller;
 
-import com.example.ananas.dto.request.*;
-import com.example.ananas.dto.response.ApiResponse;
-import com.example.ananas.dto.response.AuthenticationResponse;
-import com.example.ananas.dto.response.UserResponse;
-import com.example.ananas.entity.Review;
-import com.example.ananas.service.Service.AuthenticationService;
-import com.example.ananas.service.Service.UserService;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.ananas.dto.request.*;
+import com.example.ananas.dto.response.ApiResponse;
+import com.example.ananas.dto.response.UserResponse;
+import com.example.ananas.service.Service.AuthenticationService;
+import com.example.ananas.service.Service.UserService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -46,10 +42,7 @@ public class UserController {
         if (users == null) {
             users = new ArrayList<>(); // Trả về một mảng rỗng nếu không có người dùng
         }
-        return ApiResponse.<List<UserResponse>>builder()
-                .result(users)
-                .code(200)
-                .build();
+        return ApiResponse.<List<UserResponse>>builder().result(users).code(200).build();
     }
 
     @GetMapping({"{id}"})
@@ -61,7 +54,8 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable("id") int id, @RequestBody UserUpdateRequest userUpdateRequest) {
+    public ApiResponse<UserResponse> updateUser(
+            @PathVariable("id") int id, @RequestBody UserUpdateRequest userUpdateRequest) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateUser(id, userUpdateRequest))
                 .code(200)
@@ -69,7 +63,8 @@ public class UserController {
     }
 
     @PutMapping("/photo/{id}")
-    public ApiResponse<UserResponse> updateUserPhoto(@PathVariable("id") int id,@RequestParam("avatar") MultipartFile file) {
+    public ApiResponse<UserResponse> updateUserPhoto(
+            @PathVariable("id") int id, @RequestParam("avatar") MultipartFile file) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.uploadAvatar(id, file))
                 .code(200)
@@ -84,13 +79,14 @@ public class UserController {
                 .build();
     }
 
-//    @PostMapping("/login")
-//    public ApiResponse<AuthenticationResponse> createToken(@RequestBody AuthenticationRequest authenticationRequest) {
-//        return ApiResponse.<AuthenticationResponse>builder()
-//                .result(authenticationService.authenticationResponse(authenticationRequest))
-//                .code(200)
-//                .build();
-//    }
+    //    @PostMapping("/login")
+    //    public ApiResponse<AuthenticationResponse> createToken(@RequestBody AuthenticationRequest
+    // authenticationRequest) {
+    //        return ApiResponse.<AuthenticationResponse>builder()
+    //                .result(authenticationService.authenticationResponse(authenticationRequest))
+    //                .code(200)
+    //                .build();
+    //    }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
@@ -99,8 +95,9 @@ public class UserController {
     }
 
     @PutMapping("/change-password/{userId}")
-    public ResponseEntity<String> resetPassword(@PathVariable(name = "userId") Integer userId,@RequestBody ChangePasswordRequest changePasswordRequest) {
-        boolean isReset = userService.changePassword(userId,changePasswordRequest);
+    public ResponseEntity<String> resetPassword(
+            @PathVariable(name = "userId") Integer userId, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        boolean isReset = userService.changePassword(userId, changePasswordRequest);
         if (isReset) {
             return ResponseEntity.ok("Password has been reset successfully.");
         } else {
@@ -109,14 +106,15 @@ public class UserController {
     }
 
     @GetMapping("/getSumUser")
-    public ResponseEntity<List<BigDecimal>> getNumberUser(@RequestParam(name = "year") int year, @RequestParam(name = "month") int month) {
+    public ResponseEntity<List<BigDecimal>> getNumberUser(
+            @RequestParam(name = "year") int year, @RequestParam(name = "month") int month) {
         YearMonth yearMonth = YearMonth.of(year, month);
         int daysInMonth = yearMonth.lengthOfMonth();
         List<BigDecimal> revenues = new ArrayList<>();
 
         for (int day = 1; day <= daysInMonth; day++) {
             LocalDate date = LocalDate.of(year, month, day);
-            BigDecimal revenue =  userService.getNumberUsers(date.toString());
+            BigDecimal revenue = userService.getNumberUsers(date.toString());
             revenues.add(revenue);
         }
         return ResponseEntity.ok(revenues);

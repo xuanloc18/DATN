@@ -1,8 +1,17 @@
 package com.example.ananas.service.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.StringJoiner;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.example.ananas.dto.request.AuthenticationRequest;
 import com.example.ananas.dto.response.AuthenticationResponse;
-import com.example.ananas.entity.Role;
 import com.example.ananas.entity.User;
 import com.example.ananas.exception.AppException;
 import com.example.ananas.exception.ErrException;
@@ -10,28 +19,16 @@ import com.example.ananas.repository.User_Repository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.Date;
-import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
     User_Repository userRepository;
     PasswordEncoder passwordEncoder;
@@ -45,9 +42,8 @@ public class AuthenticationService {
                 .subject(user.getUsername())
                 .issuer("Ananas")
                 .issueTime(new Date())
-                .expirationTime(new Date(
-                        Instant.now().plus(100, ChronoUnit.HOURS).toEpochMilli()
-                ))
+                .expirationTime(
+                        new Date(Instant.now().plus(100, ChronoUnit.HOURS).toEpochMilli()))
                 .claim("scope", buildScopeToRoles(user))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -63,11 +59,12 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticationResponse(AuthenticationRequest authenticationRequest) {
-        var user = userRepository.findByUsernameOrEmail(
+        var user = userRepository
+                .findByUsernameOrEmail(
                         authenticationRequest.getIdentifier(), // Tìm cả username và email
                         authenticationRequest.getIdentifier())
                 .orElseThrow(() -> new AppException(ErrException.USER_NOT_EXISTED));
-        if (user.getIsActive().equals(true)){
+        if (user.getIsActive().equals(true)) {
             boolean checked = passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword());
             if (!checked) {
                 throw new AppException(ErrException.USER_NOT_EXISTED);
@@ -79,11 +76,9 @@ public class AuthenticationService {
                     .userId(user.getUserId())
                     .username(user.getUsername())
                     .build();
-        }
-        else {
+        } else {
             throw new AppException(ErrException.USER_NOT_EXISTED);
         }
-
     }
 
     private Object buildScopeToRoles(User user) {

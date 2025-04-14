@@ -1,12 +1,14 @@
 package com.example.ananas.repository;
-import com.example.ananas.entity.voucher.Voucher_User;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.example.ananas.entity.voucher.Voucher_User;
 
 public interface Voucher_User_Repository extends JpaRepository<Voucher_User, Integer> {
 
@@ -25,5 +27,4 @@ public interface Voucher_User_Repository extends JpaRepository<Voucher_User, Int
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM voucher_user WHERE voucher_user_id IN (:list)")
     void deleteListVoucherUser(@Param("list") List<Integer> list);
-
 }

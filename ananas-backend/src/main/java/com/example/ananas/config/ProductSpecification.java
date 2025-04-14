@@ -1,14 +1,15 @@
 package com.example.ananas.config;
 
-import com.example.ananas.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
+
+import com.example.ananas.entity.Product;
 
 public class ProductSpecification {
 
     public static Specification<Product> searchByName(String search) {
         return (root, query, criteriaBuilder) -> {
             if (search == null || search.isEmpty()) {
-                return criteriaBuilder.conjunction();  // trả về điều kiện true, không lọc gì cả
+                return criteriaBuilder.conjunction(); // trả về điều kiện true, không lọc gì cả
             }
 
             // Kiểm tra nếu tìm kiếm theo cú pháp like

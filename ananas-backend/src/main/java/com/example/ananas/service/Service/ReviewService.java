@@ -1,5 +1,10 @@
 package com.example.ananas.service.Service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.example.ananas.dto.ReviewDTO;
 import com.example.ananas.dto.response.ReviewResponse;
 import com.example.ananas.entity.Product;
@@ -10,14 +15,10 @@ import com.example.ananas.repository.Product_Repository;
 import com.example.ananas.repository.Review_Repository;
 import com.example.ananas.repository.User_Repository;
 import com.example.ananas.service.IService.IReviewService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +33,12 @@ public class ReviewService implements IReviewService {
         Review currentReview = new Review();
 
         // Kiểm tra user_id
-        User user = userRepository.findById(user_id).orElseThrow(()->new RuntimeException("User Not Found"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         // Kiểm tra product_id
-        Product product = productRepository.findById(product_id).orElseThrow(()->new RuntimeException("Product ID " + product_id + " does not exist."));
+        Product product = productRepository
+                .findById(product_id)
+                .orElseThrow(() -> new RuntimeException("Product ID " + product_id + " does not exist."));
 
         // Lấy thông tin product và user
         currentReview.setRating(review.getRating());
@@ -46,7 +49,6 @@ public class ReviewService implements IReviewService {
         // Lưu review và trả về response
         return reviewMapper.toReviewResponse(reviewRepository.save(currentReview));
     }
-
 
     public List<Review> getAllReviews() {
         return reviewRepository.findAll().stream().toList();

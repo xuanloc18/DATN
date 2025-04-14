@@ -1,14 +1,16 @@
 package com.example.ananas.entity;
 
+import java.math.BigDecimal;
+
+import jakarta.persistence.*;
+
 import com.example.ananas.entity.order.Order;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor

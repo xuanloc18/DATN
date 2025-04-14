@@ -1,8 +1,21 @@
 package com.example.ananas.service.Service;
 
-import com.example.ananas.dto.ProductVatriantDTO;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.ananas.dto.ProductVariantDTO;
 import com.example.ananas.dto.request.ProductCreateRequest;
-import com.example.ananas.dto.response.CartItemResponse;
 import com.example.ananas.dto.response.ProductImagesResponse;
 import com.example.ananas.dto.response.ProductResponse;
 import com.example.ananas.dto.response.ResultPaginationDTO;
@@ -15,23 +28,10 @@ import com.example.ananas.mapper.IProductMapper;
 import com.example.ananas.mapper.IProductVariantMapper;
 import com.example.ananas.repository.*;
 import com.example.ananas.service.IService.IProductService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +47,7 @@ public class ProductService implements IProductService {
     ProductVariant_Repository productVariantRepository;
     IProductVariantMapper productVariantMapper;
     Cart_Item_Repository cartItemRepository;
+
     @Override
     public ProductResponse createProduct(ProductCreateRequest productCreateRequest) {
 
@@ -54,10 +55,10 @@ public class ProductService implements IProductService {
         Category category = this.categoryRepository.findByCategoryName(productCreateRequest.getCategory());
         createProduct.setCategory(category);
 
-        Product product =  this.productRepository.save(createProduct);
+        Product product = this.productRepository.save(createProduct);
         product.setSaleAt(LocalDateTime.now());
-        List<ProductVatriantDTO> productVatriantDTOList = productCreateRequest.getVariants();
-        productVatriantDTOList.stream().forEach(item ->{
+        List<ProductVariantDTO> productVariantDTOList = productCreateRequest.getVariants();
+        productVariantDTOList.stream().forEach(item -> {
             ProductVariant productVariant = new ProductVariant();
             productVariant.setSize(item.getSize());
             productVariant.setColor(item.getColor());
@@ -78,11 +79,11 @@ public class ProductService implements IProductService {
 
     @Override
     public ResultPaginationDTO getAllProduct(Specification<Product> spec, Pageable pageable) {
-        Page<Product> productPage = this.productRepository.findAll(spec,pageable);
+        Page<Product> productPage = this.productRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
 
-        mt.setPage(pageable.getPageNumber()+1);
+        mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageable.getPageSize());
 
         mt.setPages(productPage.getTotalPages());
@@ -94,9 +95,7 @@ public class ProductService implements IProductService {
         rs.setResult(productResponseList);
 
         return rs;
-
     }
-
 
     @Override
     @Transactional
@@ -113,12 +112,12 @@ public class ProductService implements IProductService {
         this.productRepository.save(product);
 
         // Xóa các cart_item liên quan
-        this.productVariantRepository.findProductVariantsByProduct(product).forEach(item->{
+        this.productVariantRepository.findProductVariantsByProduct(product).forEach(item -> {
             this.cartItemRepository.deleteByProductVariant(item);
         });
         this.productVariantRepository.deleteProductVariantsByProduct(product);
-        List<ProductVatriantDTO> productVatriantDTOList = productCreateRequest.getVariants();
-        productVatriantDTOList.stream().forEach(item ->{
+        List<ProductVariantDTO> productVariantDTOList = productCreateRequest.getVariants();
+        productVariantDTOList.stream().forEach(item -> {
             ProductVariant productVariant = new ProductVariant();
             productVariant.setSize(item.getSize());
             productVariant.setColor(item.getColor());
@@ -127,7 +126,6 @@ public class ProductService implements IProductService {
             this.productVariantRepository.save(productVariant);
         });
         return this.productMapper.toProductResponse(product);
-
     }
 
     @Override
@@ -135,14 +133,14 @@ public class ProductService implements IProductService {
         return this.productRepository.existsById(id);
     }
 
-
-
     @Override
     @Transactional
-    public void deleteProduct(int id)  {
-//        List<ProductVariant> productVariants = this.productVariantRepository.findProductVariantsByProduct(this.productRepository.findById(id).get());
-//        if (productVariants.size() != 0)
-//            this.productVariantRepository.deleteProductVariantsByProduct(this.productRepository.findById(id).get());
+    public void deleteProduct(int id) {
+        //        List<ProductVariant> productVariants =
+        // this.productVariantRepository.findProductVariantsByProduct(this.productRepository.findById(id).get());
+        //        if (productVariants.size() != 0)
+        //
+        // this.productVariantRepository.deleteProductVariantsByProduct(this.productRepository.findById(id).get());
 
         this.productRepository.deleteById(id);
     }
@@ -150,7 +148,8 @@ public class ProductService implements IProductService {
     @Override
     @Transactional
     public void uploadImages(int id, MultipartFile[] files) throws IOException {
-        Product product = this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product =
+                this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
         this.productImageRepository.deleteProduct_ImagesByProduct(product);
 
         // Kiểm tra và tạo thư mục lưu trữ nếu chưa có
@@ -173,7 +172,6 @@ public class ProductService implements IProductService {
         }
     }
 
-
     @Override
     public List<ProductImagesResponse> getAllImages(int id) {
         Product product = this.productRepository.findById(id).get();
@@ -182,7 +180,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductImagesResponse getImageById(int id){
+    public ProductImagesResponse getImageById(int id) {
         Product product = this.productRepository.findById(id).get();
         Product_Image image = this.productImageRepository.findById(id).get();
         return this.productImageMapper.toProductImagesResponse(image);
@@ -197,7 +195,8 @@ public class ProductService implements IProductService {
     @Override
     public List<ProductVariant> getAllProductVariants(int id) {
 
-        return this.productVariantRepository.findProductVariantsByProduct(this.productRepository.findById(id).get());
+        return this.productVariantRepository.findProductVariantsByProduct(
+                this.productRepository.findById(id).get());
     }
 
     @Override
@@ -227,7 +226,7 @@ public class ProductService implements IProductService {
 
     // dem so luong hang
     @Override
-    public int getNumberOfProductBySizeAndColor(int productId, String color, int size ) {
+    public int getNumberOfProductBySizeAndColor(int productId, String color, String size) {
         try {
             return this.productVariantRepository.getSumOfProduct(productId, color, size);
         } catch (Exception e) {
@@ -235,7 +234,7 @@ public class ProductService implements IProductService {
         }
     }
 
-    public int getNumberOfProductVariant(int productVariantId ) {
+    public int getNumberOfProductVariant(int productVariantId) {
         try {
             return this.productVariantRepository.getSumOfProductVariant(productVariantId);
         } catch (Exception e) {
@@ -247,16 +246,16 @@ public class ProductService implements IProductService {
     public List<Map<String, Object>> getProductNameAndStock() {
         List<Object[]> results = productRepository.getProductNameAndStock();
 
-        //Map<String, Object> productData = new HashMap<>();
+        // Map<String, Object> productData = new HashMap<>();
 
-//        if (results != null && !results.isEmpty()) {
-//            Object[] row = results.get(0); // Unwrap the first result
-//            productData.put("product_name", row[0]);
-//            productData.put("total_stock", ((Number) row[1]).intValue());
-//        } else {
-//            productData.put("error", "No data found");
-//        }
-//        return productData;
+        //        if (results != null && !results.isEmpty()) {
+        //            Object[] row = results.get(0); // Unwrap the first result
+        //            productData.put("product_name", row[0]);
+        //            productData.put("total_stock", ((Number) row[1]).intValue());
+        //        } else {
+        //            productData.put("error", "No data found");
+        //        }
+        //        return productData;
 
         List<Map<String, Object>> productList = new ArrayList<>();
 
@@ -268,7 +267,6 @@ public class ProductService implements IProductService {
         }
         return productList;
     }
-
 
     @Override
     public List<Map<String, Object>> getProductNameAndStockAndCategoryName() {
@@ -349,6 +347,4 @@ public class ProductService implements IProductService {
                 throw new IllegalArgumentException("Invalid filter");
         }
     }
-
-
 }

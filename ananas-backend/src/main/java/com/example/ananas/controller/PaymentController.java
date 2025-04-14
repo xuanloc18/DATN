@@ -1,24 +1,24 @@
 package com.example.ananas.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.ananas.entity.TempOrder;
 import com.example.ananas.entity.order.Order;
 import com.example.ananas.service.Service.CartService;
 import com.example.ananas.service.Service.OrderService;
 import com.example.ananas.service.Service.TempOrderService;
 import com.example.ananas.service.Service.VnpayService;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Map;
+import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
@@ -30,7 +30,7 @@ public class PaymentController {
     CartService cartService;
 
     @GetMapping("/createPayment")
-    public String createPayment(@RequestParam String orderInfo, @RequestParam long amount, @RequestParam int orderId)   {
+    public String createPayment(@RequestParam String orderInfo, @RequestParam long amount, @RequestParam int orderId) {
         try {
             // lưu thông tin order vào bảng tạm để đối chiếu xử lý sau khi thanh toán
             String result = vnpayService.createPaymentURL(orderInfo, amount);
@@ -39,10 +39,9 @@ public class PaymentController {
             tempOrder.setTxnRef(vnpayService.code);
             tempOrder.setSumPrice(amount);
             this.tempOrderService.save(tempOrder);
-            return result ;
-        }
-        catch (Exception e){
-           return "xay ra loi: " + e.getMessage().toString();
+            return result;
+        } catch (Exception e) {
+            return "xay ra loi: " + e.getMessage().toString();
         }
     }
 
@@ -54,18 +53,18 @@ public class PaymentController {
         // In ra các tham số nhận được
         System.out.println("Received params: " + params);
         StringBuilder hashData = new StringBuilder();
-        params.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEach(entry -> {
-                    try {
-                        if (entry.getValue() != null) {
-                            hashData.append(entry.getKey()).append("=")
-                                    .append(URLEncoder.encode(entry.getValue(), "UTF-8")).append("&");
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
+        params.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
+            try {
+                if (entry.getValue() != null) {
+                    hashData.append(entry.getKey())
+                            .append("=")
+                            .append(URLEncoder.encode(entry.getValue(), "UTF-8"))
+                            .append("&");
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Loại bỏ ký tự '&' cuối cùng
         if (hashData.length() > 0) {
@@ -105,7 +104,4 @@ public class PaymentController {
             response.sendRedirect("http://localhost:5501/fail.html");
         }
     }
-
-
-
 }

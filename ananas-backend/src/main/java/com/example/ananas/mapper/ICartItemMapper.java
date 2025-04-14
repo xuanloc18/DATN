@@ -1,31 +1,32 @@
 package com.example.ananas.mapper;
 
-import com.example.ananas.dto.response.CartItemResponse;
-import com.example.ananas.entity.Cart_Item;
-import com.example.ananas.entity.ProductVariant;
-import com.example.ananas.entity.Product_Image;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.ananas.dto.response.CartItemResponse;
+import com.example.ananas.entity.Cart_Item;
+import com.example.ananas.entity.ProductVariant;
+import com.example.ananas.entity.Product_Image;
 
 @Mapper(componentModel = "spring")
 public interface ICartItemMapper {
-//    @Mapping(target = "product.productName", source = "productVariant.product.productName")
-//    @Mapping(target = "product.size", source = "productVariant.size")
-//    @Mapping(target = "product.color", source = "productVariant.color")
-//    @Mapping(target = "product.stock", source = "productVariant.stock")
-//    @Mapping(target = "images", source = "productImages", qualifiedByName = "mapImages")
-//    CartItemResponse toCartItemResponse(Cart_Item cartItem);
-//    // Hàm ánh xạ từng `Product_Image` thành `String`
-//    @Named("mapImages")
-//    static List<String> mapImages(List<Product_Image> productImages) {
-//        return productImages != null ?
-//                productImages.stream().map(Product_Image::getImageUrl).collect(Collectors.toList()) :
-//                null;
-//    }
+    //    @Mapping(target = "product.productName", source = "productVariant.product.productName")
+    //    @Mapping(target = "product.size", source = "productVariant.size")
+    //    @Mapping(target = "product.color", source = "productVariant.color")
+    //    @Mapping(target = "product.stock", source = "productVariant.stock")
+    //    @Mapping(target = "images", source = "productImages", qualifiedByName = "mapImages")
+    //    CartItemResponse toCartItemResponse(Cart_Item cartItem);
+    //    // Hàm ánh xạ từng `Product_Image` thành `String`
+    //    @Named("mapImages")
+    //    static List<String> mapImages(List<Product_Image> productImages) {
+    //        return productImages != null ?
+    //                productImages.stream().map(Product_Image::getImageUrl).collect(Collectors.toList()) :
+    //                null;
+    //    }
 
     @Mapping(target = "product", source = "productVariant", qualifiedByName = "toProductVariantCart")
     CartItemResponse toCartItemResponse(Cart_Item cartItem);
@@ -40,9 +41,9 @@ public interface ICartItemMapper {
 
     @Named("mapImages")
     static List<String> mapImages(List<Product_Image> productImages) {
-        return productImages != null ?
-                productImages.stream().map(Product_Image::getImageUrl).collect(Collectors.toList()) :
-                null;
+        return productImages != null
+                ? productImages.stream().map(Product_Image::getImageUrl).collect(Collectors.toList())
+                : null;
     }
 
     List<CartItemResponse> toCartItemResponseList(List<Cart_Item> cartItemList);

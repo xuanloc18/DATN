@@ -1,16 +1,17 @@
 package com.example.ananas.entity;
 
-import com.example.ananas.entity.order.Order;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+
+import com.example.ananas.entity.order.Order;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
@@ -60,7 +61,7 @@ public class User {
     Boolean isActive;
 
     @ElementCollection
-    Set<String>roles;
+    Set<String> roles;
 
     @OneToMany(mappedBy = "sender")
     @JsonManagedReference(value = "sent-messages")

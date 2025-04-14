@@ -56,8 +56,11 @@ public class Product {
     @Column(name = "glass_type", columnDefinition = "TEXT")
     String glassType; // Loại kính (Sapphire, Mineral, Acrylic, v.v.)
 
-    @Column(name = "case_diameter")
-    double caseDiameter; // Đường kính mặt đồng hồ (mm)
+    @Column(name = "gender") // giới tính
+    String gender;
+
+    @Column(name = "origin") // xuất xứ
+    String origin;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

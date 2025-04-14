@@ -31,8 +31,8 @@ public class ProductVariant {
     @Column(name = "stock")
     int stock; // Số lượng tồn kho
 
-    @Column(name = "strap_length")
-    double strapLength; // Độ dài dây đeo (mm)
+    @Column(name = "size")
+    String size;
 
     @OneToMany(mappedBy = "productVariant")
     @JsonManagedReference

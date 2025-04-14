@@ -1,8 +1,10 @@
 package com.example.ananas.entity.voucher;
 
+import jakarta.persistence.*;
+
 import com.example.ananas.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;

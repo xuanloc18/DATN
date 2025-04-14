@@ -8,10 +8,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductVatriantDTO {
+public class ProductVariantDTO {
 
-    int stock;
-    int size;
-    String color;
+    int stock; // Số lượng tồn kho
+    String color; // Màu sắc
+    String size; // Độ dài dây đeo (mm)
     int productId;
 }

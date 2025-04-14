@@ -1,12 +1,13 @@
 package com.example.ananas.dto.request;
 
-import com.example.ananas.entity.voucher.DiscountType;
-import jakarta.validation.constraints.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+
+import jakarta.validation.constraints.*;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
@@ -49,5 +50,4 @@ public class VoucherResquest {
     Date endDate;
 
     Timestamp createdAt;
-
 }

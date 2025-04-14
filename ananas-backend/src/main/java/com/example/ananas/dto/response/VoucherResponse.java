@@ -1,11 +1,13 @@
 package com.example.ananas.dto.response;
-import com.example.ananas.entity.voucher.DiscountType;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import com.example.ananas.entity.voucher.DiscountType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder

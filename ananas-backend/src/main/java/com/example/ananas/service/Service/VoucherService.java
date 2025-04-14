@@ -1,5 +1,15 @@
 package com.example.ananas.service.Service;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import com.example.ananas.dto.request.VoucherArchive;
 import com.example.ananas.dto.request.VoucherResquest;
 import com.example.ananas.dto.response.ResultPaginationDTO;
@@ -15,19 +25,11 @@ import com.example.ananas.repository.User_Repository;
 import com.example.ananas.repository.Voucher_Repository;
 import com.example.ananas.repository.Voucher_User_Repository;
 import com.example.ananas.service.IService.IVoucherService;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +79,8 @@ public class VoucherService implements IVoucherService {
         } else {
             // Nếu có createdAt, đảm bảo chuyển đổi đúng định dạng từ chuỗi sang Timestamp (nếu cần)
             try {
-                voucherResquest.setCreatedAt(Timestamp.valueOf(voucherResquest.getCreatedAt().toLocalDateTime()));
+                voucherResquest.setCreatedAt(
+                        Timestamp.valueOf(voucherResquest.getCreatedAt().toLocalDateTime()));
             } catch (Exception e) {
                 throw new AppException(ErrException.INVALID_DATE_FORMAT);
             }
@@ -116,8 +119,7 @@ public class VoucherService implements IVoucherService {
             throw new AppException(ErrException.VOUCHER_NOT_EXISTED);
         }
         // Kiểm tra điều kiện tối thiểu
-        if (priceBefore.compareTo(voucher.getMinOrderValue()) < 0)
-            return false;
+        if (priceBefore.compareTo(voucher.getMinOrderValue()) < 0) return false;
         Date now = new Date(System.currentTimeMillis());
 
         if (now.before(voucher.getStartDate()) || now.after(voucher.getEndDate()))
@@ -133,7 +135,6 @@ public class VoucherService implements IVoucherService {
         BigDecimal sumPriceDiscount;
         if (voucher.getDiscountType() == DiscountType.PERCENTAGE)
             sumPriceDiscount = priceBefore.multiply(voucher.getDiscountValue().divide(BigDecimal.valueOf(100)));
-
         else sumPriceDiscount = voucher.getDiscountValue().multiply(BigDecimal.valueOf(1000));
 
         if (sumPriceDiscount.compareTo(voucher.getMaxDiscount()) <= 0) return sumPriceDiscount;
@@ -143,14 +144,15 @@ public class VoucherService implements IVoucherService {
     // Nhan voucher cua user
     @Override
     public VoucherArchive archiveVoucherByUser(VoucherArchive voucherArchive) {
-        if(voucherArchive == null) throw new AppException(ErrException.VOUCHER_ERROR_ARCHIVE);
+        if (voucherArchive == null) throw new AppException(ErrException.VOUCHER_ERROR_ARCHIVE);
         Voucher voucher = voucherRepository.findVoucherByVoucherId(voucherArchive.getVoucherId());
-        if(voucher == null) throw new AppException(ErrException.VOUCHER_NOT_EXISTED);
+        if (voucher == null) throw new AppException(ErrException.VOUCHER_NOT_EXISTED);
 
-        Voucher_User voucherUser1=  voucherUserRepository.findVoucherByUserAndVoucher(voucherArchive.getUserId(), voucherArchive.getVoucherId());
-        if(voucherUser1 != null) throw new AppException(ErrException.VOUCHER_ARCHIVE_EXISTED);
+        Voucher_User voucherUser1 = voucherUserRepository.findVoucherByUserAndVoucher(
+                voucherArchive.getUserId(), voucherArchive.getVoucherId());
+        if (voucherUser1 != null) throw new AppException(ErrException.VOUCHER_ARCHIVE_EXISTED);
         Optional<User> user = userRepository.findById(voucherArchive.getUserId());
-        if(!user.isPresent()) throw new AppException(ErrException.USER_NOT_EXISTED);
+        if (!user.isPresent()) throw new AppException(ErrException.USER_NOT_EXISTED);
 
         Voucher_User voucherUser = new Voucher_User();
         voucherUser.setUser(user.get());
@@ -162,7 +164,7 @@ public class VoucherService implements IVoucherService {
     @Override
     public List<VoucherResponse> getVoucherOfUser(Integer userId) {
         List<Voucher_User> voucherUsers = voucherUserRepository.findVoucherByUserId(userId);
-        if(voucherUsers.isEmpty()) return null;
+        if (voucherUsers.isEmpty()) return null;
         List<VoucherResponse> voucherResponses = new ArrayList<>();
         for (Voucher_User voucherUser : voucherUsers) {
             voucherResponses.add(mapper.voucherToVoucherResponse(voucherUser.getVoucher()));
@@ -176,10 +178,8 @@ public class VoucherService implements IVoucherService {
         List<Voucher> voucherResponses = new ArrayList<>();
         for (Voucher voucher : vouchers) {
             Date now = new Date(System.currentTimeMillis());
-            if (now.after(voucher.getStartDate()) && now.before(voucher.getEndDate()))
-            {
-                if (voucher.getUsageLimit() > 0)
-                {
+            if (now.after(voucher.getStartDate()) && now.before(voucher.getEndDate())) {
+                if (voucher.getUsageLimit() > 0) {
                     voucherResponses.add(voucher);
                 }
             }
@@ -190,13 +190,11 @@ public class VoucherService implements IVoucherService {
     @Override
     public BigDecimal getSumDiscount(String code, BigDecimal price) {
         Voucher voucher = this.voucherRepository.findVoucherByCode(code);
-        if(voucher == null)
-            return new BigDecimal(0);
-        if(checkVoucher(code, price))
-        {
-            return this.applyVoucher(voucher,price);
+        if (voucher == null) return new BigDecimal(0);
+        if (checkVoucher(code, price)) {
+            return this.applyVoucher(voucher, price);
         }
-        return new  BigDecimal(0);
+        return new BigDecimal(0);
     }
 
     @Override
@@ -208,12 +206,9 @@ public class VoucherService implements IVoucherService {
     public Boolean deleteVoucherUser(String code) {
         Voucher voucher = this.voucherRepository.findVoucherByCode(code);
         List<Integer> list = getVoucherUserByVoucherId(voucher.getVoucherId());
-        if(!list.isEmpty())
-        {
+        if (!list.isEmpty()) {
             voucherUserRepository.deleteListVoucherUser(list);
         }
         return true;
     }
-
-
 }

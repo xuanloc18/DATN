@@ -1,14 +1,13 @@
 package com.example.ananas.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.Instant;
+
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Data
@@ -39,12 +38,12 @@ public class Review {
     int productId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false, nullable = false)
     @JsonBackReference
     User user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
     @JsonBackReference
     Product product;
 

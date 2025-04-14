@@ -1,17 +1,15 @@
 package com.example.ananas.entity.voucher;
 
-import com.example.ananas.entity.Order_Item;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
+
 import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -54,5 +52,4 @@ public class Voucher {
 
     @Column(name = "created_at", nullable = false)
     Timestamp createdAt; // Thời gian tạo
-
 }

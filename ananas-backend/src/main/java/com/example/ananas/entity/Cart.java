@@ -1,12 +1,14 @@
 package com.example.ananas.entity;
 
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -23,7 +25,7 @@ public class Cart {
 
     int sumQuantity; // tổng số lượng mặt hàng
 
-    Double sumPrice;//tổng giá tiền
+    Double sumPrice; // tổng giá tiền
 
     @ManyToOne
     @JsonBackReference("user-cart")
@@ -33,5 +35,4 @@ public class Cart {
     @OneToMany(mappedBy = "cart")
     @JsonManagedReference("cart-cartItem") // Đặt tên duy nhất cho tham chiếu này
     List<Cart_Item> cartItem;
-
 }

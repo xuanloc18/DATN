@@ -16,7 +16,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,500,500i,600,600i,700,700i"
     rel="stylesheet">
 
   <!-- Vendor CSS Files -->
@@ -276,8 +276,16 @@
 
     <!-- Bảng hiển thị danh sách đơn hàng -->
     <div class="card">
-      <div class="card-header">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="card-title">Danh Sách Đơn Hàng</h5>
+        <div>
+          <button class="btn btn-primary me-2" onclick="fetchOrders(1, 'desc')">
+            Ngày đặt gần nhất
+          </button>
+          <button class="btn btn-secondary" onclick="fetchOrders(1, 'asc')">
+            Ngày đặt xa nhất
+          </button>
+        </div>
       </div>
       <div class="card-body">
         <table class="table table-bordered table-hover">
@@ -297,6 +305,7 @@
         <div id="paginationControls" class="d-flex justify-content-end mt-3"></div>
       </div>
     </div>
+    
     </div>
   </main>
 
@@ -604,9 +613,11 @@
     document.addEventListener("DOMContentLoaded", function () {
       let currentPage = 1;
       const pageSize = 5;
+      let sortOrder = "desc"; // Default sort order
 
-      function fetchOrders(page = 1) {
-        fetch(`http://localhost:8080/order/admin/list?page=${page - 1}&size=${pageSize}`, {
+      function fetchOrders(page = 1, order = "desc") {
+        sortOrder = order; // Update the sort order
+        fetch(`http://localhost:8080/order/admin/list?page=${page - 1}&size=${pageSize}&sort=createdAt,${order}`, {
           method: "GET",
           headers: {
             Authorization: token,
@@ -677,7 +688,10 @@
 
           row.innerHTML = `
     <td>${order.id}</td>
-    <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+<td>${new Date(order.createdAt).toLocaleString('vi-VN', { 
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+})}</td>
     <td>${order.recipientName}</td>
     <td>${order.totalPrice.toLocaleString()} VND</td>
     <td>${orderStatusOptions}</td>

@@ -1,11 +1,11 @@
 package com.example.ananas.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.Instant;
 
+import jakarta.persistence.*;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
@@ -25,23 +25,19 @@ public class TempOrder {
 
     double sumPrice;
 
+    String status;
 
-    String status ;
-
-    //    List<Order_Item_Response> orderItems;
     private Instant createdAt;
 
     private Instant updateAt;
 
-
     @PrePersist
-    public void handleBeforeCreate()
-    {
+    public void handleBeforeCreate() {
         this.createdAt = Instant.now();
     }
+
     @PreUpdate
-    public void handleBeforeUpdate()
-    {
+    public void handleBeforeUpdate() {
         this.updateAt = Instant.now();
     }
 }

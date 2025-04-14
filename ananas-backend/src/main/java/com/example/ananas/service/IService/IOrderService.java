@@ -1,16 +1,17 @@
 package com.example.ananas.service.IService;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
 import com.example.ananas.dto.request.OrderCreate;
 import com.example.ananas.dto.request.OrderUpdateUser;
 import com.example.ananas.dto.response.OrderResponse;
 import com.example.ananas.dto.response.ResultPaginationDTO;
 import com.example.ananas.entity.TempOrder;
 import com.example.ananas.entity.order.Order;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 public interface IOrderService {
 
@@ -34,7 +35,7 @@ public interface IOrderService {
 
     ResultPaginationDTO getOrderByStatusOrder(String status, Pageable pageable);
 
-    ResultPaginationDTO  getOrderByUserNameAndPaymentStatus(String username, String paymentStatus, Pageable pageable);
+    ResultPaginationDTO getOrderByUserNameAndPaymentStatus(String username, String paymentStatus, Pageable pageable);
 
     ResultPaginationDTO getOrderByPaymentStatus(String payMentStatus, Pageable pageable);
 

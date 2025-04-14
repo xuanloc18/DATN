@@ -1,8 +1,9 @@
 package com.example.ananas.config;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,12 +15,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 @Configuration
 public class SecurityConfig {
     protected static final String KEY_SIGN = "lQgnbki8rjdh62RZ2FNXZB9KWYB1IjajiY04z011BXjjagnc7a";
+    private final String[] SWAGGER_ENDPOINT = {
+        "/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html", "users/confirmCreateUser"
+    };
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -28,21 +29,34 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request ->
-                request.requestMatchers("/admin/**").hasRole("Admin")
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/voucher/**").permitAll()
-                        .requestMatchers("/order/**").permitAll()
-                        .requestMatchers("/order/admin/**").hasRole("Admin")
-                        .requestMatchers("/product/**").permitAll()
-                        .requestMatchers("/category/**").permitAll()
-                        .requestMatchers("/message/**").permitAll()
-                        .requestMatchers("/cart").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(("/review/**")).permitAll()
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+        http.authorizeHttpRequests(request -> request.requestMatchers("/admin/**")
+                .hasRole("Admin")
+                .requestMatchers("/user/**")
+                .permitAll()
+                .requestMatchers("/voucher/**")
+                .permitAll()
+                .requestMatchers("/order/**")
+                .permitAll()
+                .requestMatchers("/order/admin/**")
+                .hasRole("Admin")
+                .requestMatchers("/product/**")
+                .permitAll()
+                .requestMatchers("/category/**")
+                .permitAll()
+                .requestMatchers("/message/**")
+                .permitAll()
+                .requestMatchers("/cart")
+                .permitAll()
+                .requestMatchers("/auth/**")
+                .permitAll()
+                .requestMatchers(("/review/**"))
+                .permitAll()
+                .requestMatchers("/**")
+                .permitAll()
+                .requestMatchers(SWAGGER_ENDPOINT)
+                .permitAll()
+                .anyRequest()
+                .authenticated());
         http.oauth2ResourceServer(request -> request.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())));
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
@@ -55,9 +69,10 @@ public class SecurityConfig {
                 .macAlgorithm(MacAlgorithm.HS256)
                 .build();
     }
+
     @Bean
-        // chuyen SCOPE -> ROLE
-    JwtAuthenticationConverter jwtAuthenticationConverter(){
+    // chuyen SCOPE -> ROLE
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedConverter = new JwtGrantedAuthoritiesConverter();
         grantedConverter.setAuthorityPrefix("ROLE_");
         JwtAuthenticationConverter authenConverter = new JwtAuthenticationConverter();
