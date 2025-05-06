@@ -231,14 +231,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-4 col-lg-5 col-md-5">
-                        <div class="product-banner">
-                            <a href="#">
-                                <img src="assets/img/banner/banner-3.jpg" alt="product banner">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-xl-8 col-lg-7 col-md-7">
+                  
+                    <div class="col-12">
                         <div class="top-seller-carousel slick-row-15 mtn-30" id="top-seller-list">
                             <!-- chỗ này để hiển thị các sản phẩm topseller -->
                         </div>
@@ -317,9 +311,9 @@
                                     <span id="oldPrice" class="price-old text-muted"><del></del></span>
                                 </div>
                                 <p style="margin-bottom: 10px;" id="description"></p>
-                                <div class="availability">
+                                <!-- <div class="availability">
                                     <strong>Tồn kho:</strong> <span id="availability" class="text-success"></span>
-                                </div>
+                                </div> -->
                                 <div id="qvId" style="display: none;"></div>
 
                                 <!-- Chọn màu -->
@@ -340,14 +334,13 @@
                                 <div class="size-selection mt-3">
                                     <label><strong>Kích cỡ:</strong></label>
                                     <div class="d-flex mt-2">
-                                        <div class="size-box me-2" data-size="37">37</div>
-                                        <div class="size-box me-2" data-size="38">38</div>
-                                        <div class="size-box me-2" data-size="39">39</div>
-                                        <div class="size-box me-2" data-size="40">40</div>
-                                        <div class="size-box me-2" data-size="41">41</div>
-                                        <div class="size-box me-2" data-size="42">42</div>
-                                        <div class="size-box me-2" data-size="43">43</div>
-                                        <div class="size-box me-2" data-size="44">44</div>
+                                        <div class="size-box me-2" data-size="XXS">XXS</div>
+                                        <div class="size-box me-2" data-size="XS">XS</div>
+                                        <div class="size-box me-2" data-size="S">S</div>
+                                        <div class="size-box me-2" data-size="M">M</div>
+                                        <div class="size-box me-2" data-size="L">L</div>
+                                        <div class="size-box me-2" data-size="XL">XL</div>
+                                        <div class="size-box me-2" data-size="XXL">XXL</div>
                                     </div>
                                 </div>
 
@@ -754,7 +747,7 @@
                 $('.top-seller-carousel').slick({
                     rows: 2,
                     arrows: false,
-                    slidesToShow: 2,
+                    slidesToShow: 3,
                     responsive: [
                         {
                             breakpoint: 1600, // Màn hình lớn hơn 1600px

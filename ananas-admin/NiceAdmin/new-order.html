@@ -16,7 +16,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,500,500i,600,600i,700,700i"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
     rel="stylesheet">
 
   <!-- Vendor CSS Files -->
@@ -613,11 +613,10 @@
     document.addEventListener("DOMContentLoaded", function () {
       let currentPage = 1;
       const pageSize = 5;
-      let sortOrder = "desc"; // Default sort order
+      const sortField = "createdAt";
 
-      function fetchOrders(page = 1, order = "desc") {
-        sortOrder = order; // Update the sort order
-        fetch(`http://localhost:8080/order/admin/list?page=${page - 1}&size=${pageSize}&sort=createdAt,${order}`, {
+      function fetchOrders(page = 1) {
+        fetch(`http://localhost:8080/order/admin/list?page=${page - 1}&size=${pageSize}`, {
           method: "GET",
           headers: {
             Authorization: token,

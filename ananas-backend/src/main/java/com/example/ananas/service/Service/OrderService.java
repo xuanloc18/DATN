@@ -358,7 +358,7 @@ public class OrderService implements IOrderService {
             Product product = productVariant.getProduct();
 
             // Đặt lại giá trị saleAt về null hoặc giá trị mặc định
-            product.setSaleAt(LocalDateTime.from(product.getCreatedAt())); // hoặc đặt giá trị khác nếu cần
+//            product.setSaleAt(LocalDateTime.from(product.getCreatedAt())); // hoặc đặt giá trị khác nếu cần
             productRepository.save(product);
         }
     }
@@ -367,7 +367,7 @@ public class OrderService implements IOrderService {
     public OrderResponse changeOrderStatus(Integer orderId, String status) {
         Order order =
                 orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrException.ORDER_NOT_EXISTED));
-        if (order.getStatus() == OrderStatus.DELIVERED || order.getStatus() == OrderStatus.CANCELED) {
+        if (order.getStatus() == OrderStatus.DELIVERED ) {
             throw new AppException(ErrException.ORDER_ERROR_STATUS);
         }
         if (status.equalsIgnoreCase(OrderStatus.SHIPPED.name())) {

@@ -186,14 +186,13 @@
                                         <div class="size-selection mt-3">
                                             <label><strong>Kích cỡ:</strong></label>
                                             <div class="d-flex mt-2">
-                                                <div class="size-box me-2" data-size="37">37</div>
-                                                <div class="size-box me-2" data-size="38">38</div>
-                                                <div class="size-box me-2" data-size="39">39</div>
-                                                <div class="size-box me-2" data-size="40">40</div>
-                                                <div class="size-box me-2" data-size="41">41</div>
-                                                <div class="size-box me-2" data-size="42">42</div>
-                                                <div class="size-box me-2" data-size="43">43</div>
-                                                <div class="size-box me-2" data-size="44">44</div>
+                                                <div class="size-box me-2" data-size="XXS">XXS</div>
+                                                <div class="size-box me-2" data-size="XS">XS</div>
+                                                <div class="size-box me-2" data-size="S">S</div>
+                                                <div class="size-box me-2" data-size="M">M</div>
+                                                <div class="size-box me-2" data-size="L">L</div>
+                                                <div class="size-box me-2" data-size="XL">XL</div>
+                                                <div class="size-box me-2" data-size="XXL">XXL</div>
                                             </div>
                                         </div>
                                         <!-- Số lượng và nút thêm giỏ hàng -->
@@ -246,7 +245,7 @@
                                                     <p></p>
                                                     <div class="review-description">
                                                         <div class="tab-thumb">
-                                                            <img src="assets/img/about/services.jpg" alt="">
+                                                            <img id="descriptionImage" src="" alt="Product Description Image">
                                                         </div>
                                                         <div class="tab-des">
                                                             <p id="des"></p>
@@ -260,8 +259,8 @@
                                                 <table class="table table-bordered">
                                                     <thead>
                                                         <tr>
-                                                            <th>Kích cỡ</th>
-                                                            <th>Màu sắc</th>
+                                                            <th>Thuộc tính</th>
+                                                            <th>Giá trị</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="product-variants">
@@ -409,14 +408,13 @@
                                 <div class="size-selection mt-3">
                                     <label><strong>Kích cỡ:</strong></label>
                                     <div class="d-flex mt-2">
-                                        <div class="size-box me-2" data-size="37">37</div>
-                                        <div class="size-box me-2" data-size="38">38</div>
-                                        <div class="size-box me-2" data-size="39">39</div>
-                                        <div class="size-box me-2" data-size="40">40</div>
-                                        <div class="size-box me-2" data-size="41">41</div>
-                                        <div class="size-box me-2" data-size="42">42</div>
-                                        <div class="size-box me-2" data-size="43">43</div>
-                                        <div class="size-box me-2" data-size="44">44</div>
+                                        <div class="size-box me-2" data-size="XXS">XXS</div>
+                                        <div class="size-box me-2" data-size="XS">XS</div>
+                                        <div class="size-box me-2" data-size="S">S</div>
+                                        <div class="size-box me-2" data-size="M">M</div>
+                                        <div class="size-box me-2" data-size="L">L</div>
+                                        <div class="size-box me-2" data-size="XL">XL</div>
+                                        <div class="size-box me-2" data-size="XXL">XXL</div>
                                     </div>
                                 </div>
 
@@ -938,38 +936,96 @@
             document.getElementById('thumb3').src = thumbnails[2] ? `http://localhost:8080/images/product/${thumbnails[2]}` : 'http://localhost:8080/images/product/default-image.jpg';
             document.getElementById('thumb4').src = thumbnails[3] ? `http://localhost:8080/images/product/${thumbnails[3]}` : 'http://localhost:8080/images/product/default-image.jpg';
 
+            // Update description image dynamically
+            const descriptionImage = product.images && product.images[0] 
+                ? `http://localhost:8080/images/product/${product.images[0]}` 
+                : 'http://localhost:8080/images/product/default-image.jpg';
+            document.getElementById('descriptionImage').src = descriptionImage;
+
         } catch (error) {
             console.error(error);
         }
     }
+    async function fetchAndDisplayProductDetails(productId) {
+    try {
+        const response = await fetch(`http://localhost:8080/product/${productId}`);
+        if (!response.ok) throw new Error('Failed to fetch product details');
 
-    async function fetchAndDisplayProductVariants(productId) {
-        try {
-            const response = await fetch(`http://localhost:8080/product/variants/${productId}`);
-            if (!response.ok) throw new Error('Failed to fetch product variants');
+        const data = await response.json();
+        const product = data.result;
+        const tableBody = document.getElementById('product-variants'); // tbody element
+        tableBody.innerHTML = ''; // Xóa dữ liệu cũ
 
-            const data = await response.json();
-            const variants = data.result;
-            const variantsTableBody = document.getElementById('product-variants');
-            variantsTableBody.innerHTML = ''; // Xóa dữ liệu cũ
+        const labels = {
+            productName: "Tên sản phẩm",
+            material: "Chất liệu",
+            category: "Danh mục",
+            soldQuantity: "Số lượng đã bán",
+            bandType: "Loại dây đeo",
+            movementType: "Loại máy",
+            waterResistance: "Chống nước",
+            glassType: "Loại kính",
+            gender: "Giới tính",
+            origin: "Xuất xứ"
+        };
 
-            variants.forEach(variant => {
+        function formatValue(key, value) {
+            if (key === 'price') {
+                return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
+            if (key === 'discount') {
+                return (value * 100) + '%';
+            }
+            return value;
+        }
+
+        Object.entries(product).forEach(([key, value]) => {
+            if (labels[key]) { // Only process keys defined in the labels object
                 const row = document.createElement('tr');
 
                 const nameCell = document.createElement('td');
-                nameCell.textContent = variant.size; // Tên biến thể
+                nameCell.textContent = labels[key];
                 row.appendChild(nameCell);
 
                 const valueCell = document.createElement('td');
-                valueCell.textContent = variant.color; // Giá trị biến thể
+                valueCell.textContent = formatValue(key, value);
                 row.appendChild(valueCell);
 
-                variantsTableBody.appendChild(row);
-            });
-        } catch (error) {
-            console.error('Error fetching product variants:', error);
-        }
+                tableBody.appendChild(row);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching product details:', error);
     }
+}
+
+    // async function fetchAndDisplayProductVariants(productId) {
+    //     try {
+    //         const response = await fetch(`http://localhost:8080/product/${productId}`);
+    //         if (!response.ok) throw new Error('Failed to fetch product variants');
+
+    //         const data = await response.json();
+    //         const variants = data.result;
+    //         const variantsTableBody = document.getElementById('product-variants');
+    //         variantsTableBody.innerHTML = ''; // Xóa dữ liệu cũ
+
+    //         variants.forEach(variant => {
+    //             const row = document.createElement('tr');
+
+    //             const nameCell = document.createElement('td');
+    //             nameCell.textContent = variant.size; // Tên biến thể
+    //             row.appendChild(nameCell);
+
+    //             const valueCell = document.createElement('td');
+    //             valueCell.textContent = variant.color; // Giá trị biến thể
+    //             row.appendChild(valueCell);
+
+    //             variantsTableBody.appendChild(row);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error fetching product variants:', error);
+    //     }
+    // }
 
     // Phóng to ảnh chính khi di chuột
     const mainImage = document.getElementById('mainImage');
@@ -1124,7 +1180,8 @@
         if (productId) {
             // Gọi hàm để fetch chi tiết sản phẩm
             fetchProductDetails(productId);
-            fetchAndDisplayProductVariants(productId);
+            // fetchAndDisplayProductVariants(productId);
+            fetchAndDisplayProductDetails(productId);
 
             document.getElementById("addToCart2").addEventListener("click", function () {
                 const selectedColor = document.querySelector('.color-box.selected')?.getAttribute('data-color');

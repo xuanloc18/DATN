@@ -744,29 +744,39 @@
         // Thêm biến thể mới
         $('#addVariant').on('click', function () {
           const variantTemplate = `
-                  <div class="variant mb-3">
-                      <div class="row g-3">
-                          <div class="col-md-4">
-                              <label class="form-label">Size</label>
-                              <input type="number" class="form-control size" required>
-                          </div>
-                          <div class="col-md-4">
-                              <label class="form-label">Màu sắc</label>
-                              <select class="form-select color" required>
-                                  <option value="Black">Đen</option>
-                                  <option value="White">Trắng</option>
-                                  <option value="Blue">Xanh</option>
-                                  <option value="Red">Đỏ</option>
-                              </select>
-                          </div>
-                          <div class="col-md-4">
-                              <label class="form-label">Số lượng</label>
-                              <input type="number" class="form-control stock" required>
-                          </div>
-                      </div>
-                  </div>`;
-          $('#variantsContainer').append(variantTemplate);
-        });
+    <div class="variant mb-3">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Size mặt đồng hồ</label>
+          <select class="form-select size" required>
+            <option value="">-- Chọn size --</option>
+            <option value="XXS">XXS (18-22mm) - Trẻ em</option>
+            <option value="XS">XS (24-26mm) - Nữ mini</option>
+            <option value="S">S (28-32mm) - Nữ</option>
+            <option value="M">M (34-38mm) - Unisex/Nam nhỏ</option>
+            <option value="L">L (39-42mm) - Nam tiêu chuẩn</option>
+            <option value="XL">XL (43-46mm) - Nam thể thao</option>
+            <option value="XXL">XXL (47-50mm) - Đặc biệt</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Màu sắc</label>
+          <select class="form-select color" required>
+            <option value="Black">Đen</option>
+            <option value="White">Trắng</option>
+            <option value="Blue">Xanh</option>
+            <option value="Red">Đỏ</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="stock" class="form-label">Số lượng</label>
+          <input type="number" class="form-control stock" required>
+        </div>
+      </div>
+    </div>`;
+  $('#variantsContainer').append(variantTemplate);
+});
+
         // Thêm biến thể mới
         $('#uaddVariant').on('click', function () {
           const variantTemplate = `
@@ -775,6 +785,7 @@
                           <div class="col-md-4">
                               <label class="form-label">Size</label>
                               <input type="number" class="form-control size" required>
+                              
                           </div>
                           <div class="col-md-4">
                               <label class="form-label">Màu sắc</label>
@@ -1170,7 +1181,7 @@
             dropdown.empty();
             dropdown.append('<option value="" selected disabled>Chọn danh mục</option>');
             categories.forEach(category => {
-              dropdown.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
+              dropdown.append(`<option value="${category.categoryName}">${category.categoryName}</option>`);
             });
           });
         }
