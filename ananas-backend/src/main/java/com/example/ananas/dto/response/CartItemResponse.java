@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 public class CartItemResponse {
     ProductVariantCart product;
     int quantity;
-
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
@@ -26,6 +25,7 @@ public class CartItemResponse {
         double price;
         String size;
         int stock;
+        double discount;
         List<String> images;
     }
 }

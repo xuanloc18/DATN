@@ -163,8 +163,8 @@ public class ProductController {
     }
 
     @GetMapping("/product/stock")
-    public List<Map<String, Object>> getProductNameAndStockAndCategoryName() {
-        return productService.getProductNameAndStockAndCategoryName();
+    public List<Map<String, Object>> getProductNameAndStockAndCategoryName(Pageable pageable) {
+        return productService.getProductNameAndStockAndCategoryName(pageable);
     }
 
     @GetMapping("/product/chart")

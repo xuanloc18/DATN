@@ -269,8 +269,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Map<String, Object>> getProductNameAndStockAndCategoryName() {
-        List<Object[]> results = productRepository.getProductNameAndStockAndCategoryName();
+    public List<Map<String, Object>> getProductNameAndStockAndCategoryName(Pageable pageable) {
+        List<Object[]> results = productRepository.getProductNameAndStockAndCategoryName(pageable);
 
         List<Map<String, Object>> productList = new ArrayList<>();
 
@@ -281,6 +281,7 @@ public class ProductService implements IProductService {
             productData.put("total_stock", ((Number) row[2]).intValue()); // Total Stock
             productList.add(productData);
         }
+
         return productList;
     }
 

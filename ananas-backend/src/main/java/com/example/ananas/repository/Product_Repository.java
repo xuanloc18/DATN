@@ -2,6 +2,7 @@ package com.example.ananas.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -38,7 +39,7 @@ public interface Product_Repository extends JpaRepository<Product, Integer>, Jpa
                     + "INNER JOIN ananas.category c ON p.category_id = c.category_id "
                     + "GROUP BY p.product_name, c.category_name",
             nativeQuery = true)
-    List<Object[]> getProductNameAndStockAndCategoryName();
+    List<Object[]> getProductNameAndStockAndCategoryName(Pageable pageable);
 
     @Query(
             value = "SELECT MONTH(p.created_at) AS month, " + "SUM(v.stock) AS totalStock, "

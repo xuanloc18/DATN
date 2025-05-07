@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="meta description">
-    <title>Ananas - Shoes Store</title>
+    <title>Shoes Store</title>
     <!--=== Favicon ===-->
     <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" />
     <!--=== All Plugins CSS ===-->
@@ -484,7 +484,7 @@
             <td>${productColumn}</td> <!-- Cột sản phẩm -->
             <td>${new Date(order.createdAt).toLocaleDateString()}</td>
             <td>${statusHtml}</td>
-            <td>${order.totalAmount.toLocaleString()} VNĐ</td>
+            <td>${order.totalPrice.toLocaleString()} VNĐ</td>
             <td><button class="btn btn-success" onclick="viewOrderDetails(${order.id})">Xem chi tiết</button></td>
         `;
 

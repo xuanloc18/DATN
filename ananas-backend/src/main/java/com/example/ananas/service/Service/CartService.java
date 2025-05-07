@@ -1,7 +1,10 @@
 package com.example.ananas.service.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -93,7 +97,14 @@ public class CartService implements ICartService {
         Cart cart = this.cartRepository.findByUser(
                 this.userRepository.findById(userId).get());
         List<Cart_Item> cartItemList = this.cartItemRepository.findCart_ItemsByCart(cart);
-        return this.cartItemMapper.toCartItemResponseList(cartItemList);
+
+
+        List<CartItemResponse> cartItemResponseList = this.cartItemMapper.toCartItemResponseList(cartItemList);
+        cartItemResponseList.forEach((cartItemResponse) -> {
+            Optional<Product> product=productRepository.findById(cartItemResponse.getProduct().getProductId());
+            product.ifPresent(value -> cartItemResponse.getProduct().setDiscount(value.getDiscount()));
+        });
+        return cartItemResponseList;
     }
 
     @Override

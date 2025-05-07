@@ -615,8 +615,8 @@
       const pageSize = 5;
       const sortField = "createdAt";
 
-      function fetchOrders(page = 1) {
-        fetch(`http://localhost:8080/order/admin/list?page=${page - 1}&size=${pageSize}`, {
+      function fetchOrders(page = 1, sortOrder = "desc") {
+        fetch(`http://localhost:8080/order/admin/list?page=${page - 1}&size=${pageSize}&sort=createdAt,${sortOrder}`, {
           method: "GET",
           headers: {
             Authorization: token,
@@ -812,6 +812,9 @@
           })
           .catch((error) => console.error("Lỗi:", error));
       }
+      document.querySelector(".btn-primary").addEventListener("click", () => fetchOrders(1, "desc"));
+      document.querySelector(".btn-secondary").addEventListener("click", () => fetchOrders(1, "asc"));
+
       // Lấy dữ liệu lần đầu
       fetchOrders();
       fetchAvatar();

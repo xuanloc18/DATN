@@ -407,10 +407,9 @@ async function fetchAvatar() {
 // Hàm gọi API và hiển thị dữ liệu
 async function fetchAndDisplayProducts() {
   try {
-      const response = await fetch('http://localhost:8080/product/stock');
+      const response = await fetch('http://localhost:8080/product/stock?sort=total_stock,desc');
       const data = await response.json();
       const products = data.result;
-
       // Lấy phần tử tbody
       const tableBody = document.getElementById('inventoryTableBody');
       tableBody.innerHTML = ''; // Xóa dữ liệu cũ

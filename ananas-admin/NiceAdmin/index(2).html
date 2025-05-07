@@ -254,7 +254,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Dashboard Quản lý Cửa hàng Giày</h1>
+      <h1>Dashboard Quản lý Cửa hàng XLSTORE</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
@@ -348,11 +348,11 @@
                             new ApexCharts(document.querySelector("#productsChart"), {
                                 series: [
                                     {
-                                        name: "Giày nhập kho",
+                                        name: "Nhập kho",
                                         data: totalStock,
                                     },
                                     {
-                                        name: "Giày bán ra",
+                                        name: "Bán ra",
                                         data: totalSold,
                                     },
                                 ],
@@ -365,7 +365,7 @@
                                 dataLabels: { enabled: false },
                                 stroke: { curve: "smooth" },
                                 xaxis: { categories: months },
-                                tooltip: { y: { formatter: (val) => `${val} đôi giày` } },
+                                tooltip: { y: { formatter: (val) => `${val} đồng hồ` } },
                             }).render();
                         } catch (error) {
                             // Xử lý lỗi khi gọi API hoặc render biểu đồ

@@ -52,7 +52,7 @@ public interface IProductService {
 
     List<Map<String, Object>> getProductNameAndStock();
 
-    List<Map<String, Object>> getProductNameAndStockAndCategoryName();
+    List<Map<String, Object>> getProductNameAndStockAndCategoryName(Pageable pageable);
 
     List<Map<String, Object>> getMonthlyStatisticsForCurrentYear();
 

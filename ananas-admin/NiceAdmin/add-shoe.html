@@ -628,7 +628,7 @@
         // Hàm lấy danh sách sản phẩm
         function fetchProducts(page) {
           $.ajax({
-            url: `${apiUrl}?page=${page}&size=${pageSize}&sort=createdAt,desc`,
+            url: `${apiUrl}?page=${page}&size=${pageSize}&sort=soldQuantity,desc`,
             method: "GET",
             success: function (response) {
               if (response.code === 200) {

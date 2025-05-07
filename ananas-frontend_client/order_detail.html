@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="meta description">
-    <title>Ananas - Shoes Store</title>
+    <title>Shoes Store</title>
     <!--=== Favicon ===-->
     <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" />
     <!--=== All Plugins CSS ===-->
@@ -255,14 +255,14 @@
                                                 <td>Áp dụng mã giảm giá</td>
                                                 <td id="cart-voucher">--</td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>VAT(10%)</td>
                                                 <td id="cart-vat">--</td>
                                             </tr>
                                             <tr>
                                                 <td>Phí vận chuyển</td>
                                                 <td id="cart-shipping">--</td>
-                                            </tr>
+                                            </tr> -->
                                             <tr class="total">
                                                 <td>Tổng</td>
                                                 <td id="cart-total-amount" class="total-amount">--</td>
@@ -679,7 +679,7 @@
         }
 
         function renderCartSummary(orderData) {
-            const subTotal = orderData.totalPrice;
+            const subTotal = orderData.totalAmount;
             var voucherDiscount = orderData.discount_voucher;
             const vatRate = 0.1;
             const shippingFee = 25000;
@@ -692,10 +692,12 @@
             if (voucherDiscount == null) {
                 voucherDiscount = 0.0;
             }
-            const total = subTotal - voucherDiscount + vat + shippingFee;
+            // const total = subTotal - voucherDiscount + vat + shippingFee;
+            const total = subTotal - voucherDiscount;
+
             document.getElementById('cart-voucher').textContent = `-${voucherDiscount.toLocaleString()} VNĐ`;
-            document.getElementById('cart-vat').textContent = `${vat.toLocaleString()} VNĐ`;
-            document.getElementById('cart-shipping').textContent = `${shippingFee.toLocaleString()} VNĐ`;
+            // document.getElementById('cart-vat').textContent = `${vat.toLocaleString()} VNĐ`;
+            // document.getElementById('cart-shipping').textContent = `${shippingFee.toLocaleString()} VNĐ`;
             document.getElementById('cart-total-amount').textContent = `${total.toLocaleString()} VNĐ`;
         }
         // Bắt đầu xử lý mini card

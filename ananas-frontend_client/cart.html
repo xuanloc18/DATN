@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="meta description">
-    <title>Ananas - Shoes Store</title>
+    <title>Shoes Store</title>
     <!--=== Favicon ===-->
     <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" />
     <!--=== All Plugins CSS ===-->
@@ -162,6 +162,7 @@
                                             <th class="pro-title">Sản phẩm</th>
                                             <th class="pro-price">Giá</th>
                                             <th class="pro-quantity">Số lượng</th>
+                                            <th class="pro-discount">Giảm</th>
                                             <th class="pro-subtotal">Tổng giá</th>
                                             <th class="pro-remove">Xóa</th>
                                         </tr>
@@ -423,10 +424,11 @@
                                 const product = item.product;
                                 const quantity = item.quantity;
                                 const price = product.price || 0; // Sử dụng giá mặc định nếu không có `product.price`
+                                const discount = product.discount || 0; // Sử dụng soldQuantity mặc định nếu không có
                                 const variantId = product.variantId; // Lấy variantId để dùng khi xóa
 
                                 // Cộng giá tiền của item vào tổng sum
-                                sum += price * quantity;
+                                sum += price * quantity*(100 - discount) / 100;
 
                                 // Tạo dòng mới
                                 const row = `
@@ -443,8 +445,11 @@
                                             <td class="pro-quantity">
                                                 <div class="pro-qty"><p>${quantity}</p></div>
                                             </td>
+                                             <td class="pro-discount">
+                                                <div class="pro-qty"><p>${discount}%</p></div>
+                                            </td>
                                             <td class="pro-subtotal">
-                                                <span>${formatPrice(price * quantity)}</span>
+                                                <span>${formatPrice(price * quantity*(100 - discount) / 100)}</span>
                                             </td>
                                             <td class="pro-remove">
                                                 <a href="#" class="remove-item" data-variant-id="${variantId}">
