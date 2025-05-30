@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderCreate {
 
-    String code;
+    String code;// mã voucher
 
     PaymentMethod paymentMethod;
 
